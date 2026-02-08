@@ -1,0 +1,72 @@
+# Requirements for Kidney Stone Detection Project
+# Lightweight, Explainable, and Real-time AI Solution
+
+# Core ML and Computer Vision
+ultralytics>=8.0.0          # YOLOv8 implementation
+torch>=2.0.0               # PyTorch framework
+torchvision>=0.15.0        # Computer vision utilities
+opencv-python>=4.8.0       # Image processing and video handling
+Pillow>=9.5.0              # Image manipulation
+numpy>=1.24.0              # Numerical computations
+
+# Data Processing and Visualization
+matplotlib>=3.7.0          # Plotting and visualization
+seaborn>=0.12.0            # Statistical visualization
+pandas>=2.0.0              # Data manipulation
+scikit-learn>=1.3.0        # Machine learning utilities
+scipy>=1.10.0              # Scientific computing
+
+# Explainability and Interpretability
+grad-cam>=1.4.0            # Gradient-weighted Class Activation Mapping
+captum>=0.6.0              # PyTorch interpretability library
+shap>=0.42.0               # SHAP values for model explanation
+
+# Model Evaluation and Metrics
+pycocotools>=2.0.6         # COCO evaluation metrics
+tensorboard>=2.13.0        # Training visualization
+wandb>=0.15.0              # Experiment tracking (optional)
+
+# Image Augmentation and Preprocessing
+albumentations>=1.3.0      # Advanced image augmentation
+imgaug>=0.4.0              # Image augmentation library
+scikit-image>=0.21.0       # Image processing algorithms
+
+# Real-time Processing
+imutils>=0.5.4             # OpenCV convenience functions
+threading>=0.1.0           # Multi-threading for real-time processing
+
+# Configuration and Utilities
+pyyaml>=6.0                # YAML configuration files
+tqdm>=4.65.0               # Progress bars
+argparse>=1.4.0            # Command line argument parsing
+pathlib>=1.0.1             # Path manipulation
+
+# Medical Imaging Specific
+pydicom>=2.4.0             # DICOM medical image handling
+SimpleITK>=2.2.0          # Medical image processing
+nibabel>=5.1.0             # Neuroimaging data handling
+
+# Performance Optimization
+numba>=0.57.0              # JIT compilation for speed
+psutil>=5.9.0              # System monitoring
+memory-profiler>=0.60.0    # Memory usage profiling
+
+# Development and Testing
+pytest>=7.4.0             # Testing framework
+black>=23.0.0              # Code formatting
+flake8>=6.0.0              # Code linting
+mypy>=1.5.0                # Type checking
+
+# Documentation
+sphinx>=7.0.0              # Documentation generation
+sphinx-rtd-theme>=1.3.0    # Read the Docs theme
+
+# Optional: GPU Acceleration (uncomment if using CUDA)
+# torch-audio>=2.0.0       # Audio processing
+# torchaudio>=2.0.0        # Audio utilities
+
+# Optional: Cloud and Deployment
+# fastapi>=0.100.0         # Web API framework
+# uvicorn>=0.23.0          # ASGI server
+# docker>=6.1.0            # Containerization
+

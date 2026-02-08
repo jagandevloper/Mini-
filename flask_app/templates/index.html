@@ -1,0 +1,2444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kidney Stone Detection AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    <style>
+        /* Light Theme (Default) - Bright Medical UI */
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #2563EB;
+            --accent-blue: #1E40AF;
+            --light-blue: #E0F2FE;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            
+            /* Background Colors - Bright Medical UI */
+            --bg-primary: #F8FAFC;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #E0F2FE;
+            --bg-gradient: linear-gradient(135deg, #F8FAFC 0%, #E0F2FE 50%, #dbeafe 100%);
+            
+            /* Text Colors - Dark Slate */
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --text-inverse: #ffffff;
+            
+            /* Border Colors */
+            --border-color: #e2e8f0;
+            --border-light: rgba(37, 99, 235, 0.2);
+            
+            /* Gradients - Blue Gradient Buttons/Links */
+            --gradient-1: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+            --gradient-2: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+            --gradient-3: linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+            --gradient-hero: linear-gradient(135deg, #2563EB 0%, #1E40AF 50%, #3b82f6 100%);
+            --gradient-navbar: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(30, 64, 175, 0.95) 100%);
+            
+            /* Shadows */
+            --shadow-light: 0 2px 10px rgba(37, 99, 235, 0.1);
+            --shadow-medium: 0 4px 20px rgba(37, 99, 235, 0.2);
+            --shadow-heavy: 0 10px 40px rgba(37, 99, 235, 0.3);
+            --shadow-navbar: 0 4px 20px rgba(37, 99, 235, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            
+            /* Card Backgrounds */
+            --card-bg: #ffffff;
+            --card-bg-hover: #F8FAFC;
+            --stats-card-bg: rgba(255, 255, 255, 0.15);
+            --stats-card-bg-hover: rgba(255, 255, 255, 0.25);
+            
+            /* Glow Effects (minimal in light mode) */
+            --glow-text: none;
+            --glow-button: 0 0 0 rgba(37, 99, 235, 0);
+            --glow-card: 0 0 0 rgba(37, 99, 235, 0);
+        }
+        
+        /* Dark Theme - Bright-on-Dark Glowing Style */
+        [data-theme="dark"] {
+            --primary-color: #1E3A8A;
+            --secondary-color: #38BDF8;
+            --accent-blue: #38BDF8;
+            --light-blue: #0B1120;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            
+            /* Background Colors - Bright-on-Dark */
+            --bg-primary: #0B1120;
+            --bg-secondary: #1E293B;
+            --bg-tertiary: #1E293B;
+            --bg-gradient: linear-gradient(135deg, #0B1120 0%, #1E293B 50%, #1E3A8A 100%);
+            
+            /* Text Colors - Bright White */
+            --text-primary: #F8FAFC;
+            --text-secondary: #CBD5E1;
+            --text-tertiary: #94A3B8;
+            --text-inverse: #0B1120;
+            
+            /* Border Colors */
+            --border-color: #334155;
+            --border-light: rgba(56, 189, 248, 0.3);
+            
+            /* Gradients - Cyan-Blue Glow Gradient */
+            --gradient-1: linear-gradient(135deg, #1E3A8A 0%, #38BDF8 100%);
+            --gradient-2: linear-gradient(135deg, #1E3A8A 0%, #38BDF8 100%);
+            --gradient-3: linear-gradient(135deg, #1E3A8A 0%, #38BDF8 100%);
+            --gradient-hero: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #38BDF8 100%);
+            --gradient-navbar: linear-gradient(135deg, rgba(11, 17, 32, 0.95) 0%, rgba(30, 58, 138, 0.95) 100%);
+            
+            /* Shadows with Glow */
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.1);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.15);
+            --shadow-heavy: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 50px rgba(56, 189, 248, 0.2);
+            --shadow-navbar: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.2), 0 0 0 1px rgba(56, 189, 248, 0.1) inset;
+            
+            /* Card Backgrounds */
+            --card-bg: #1E293B;
+            --card-bg-hover: #334155;
+            --stats-card-bg: rgba(56, 189, 248, 0.15);
+            --stats-card-bg-hover: rgba(56, 189, 248, 0.25);
+            
+            /* Glow Effects - Soft Blue Glow */
+            --glow-text: 0 0 10px rgba(56, 189, 248, 0.3), 0 0 20px rgba(56, 189, 248, 0.1);
+            --glow-button: 0 0 15px rgba(56, 189, 248, 0.4), 0 0 30px rgba(56, 189, 248, 0.2);
+            --glow-card: 0 0 20px rgba(56, 189, 248, 0.2), 0 0 40px rgba(56, 189, 248, 0.1);
+        }
+        
+        /* Global Transitions - Smooth 0.3s */
+        * {
+            transition: 
+                background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                text-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Focus States - Accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 3px;
+        }
+        
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            font-family: 'Inter', 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Professional 3D Background Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(30, 64, 175, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+                linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(37, 99, 235, 0.03) 2px,
+                    rgba(37, 99, 235, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(30, 64, 175, 0.03) 2px,
+                    rgba(30, 64, 175, 0.03) 4px
+                );
+            z-index: 0;
+            pointer-events: none;
+            transform: rotate(45deg);
+            opacity: 0.4;
+        }
+        
+        [data-theme="dark"] body::before {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(30, 58, 138, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 60%),
+                linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+        }
+        
+        [data-theme="dark"] body::after {
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(56, 189, 248, 0.05) 2px,
+                    rgba(56, 189, 248, 0.05) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(30, 58, 138, 0.05) 2px,
+                    rgba(30, 58, 138, 0.05) 4px
+                );
+        }
+        
+        /* 3D Geometric Shapes */
+        .container,
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Additional 3D depth layers */
+        body {
+            background-attachment: fixed;
+        }
+        
+        .navbar {
+            background: var(--gradient-navbar);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                0 0 40px rgba(37, 99, 235, 0.15);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        [data-theme="dark"] .navbar {
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(56, 189, 248, 0.1) inset,
+                0 0 50px rgba(56, 189, 248, 0.2);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-navbar);
+            z-index: -1;
+            opacity: 0.95;
+        }
+        
+        .navbar .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .navbar-brand {
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-family: 'Poppins', 'Inter', sans-serif;
+            color: white !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 0 0 30px rgba(96, 165, 250, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .navbar-brand:hover {
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3), 0 0 40px rgba(96, 165, 250, 0.5);
+        }
+        
+        .navbar-brand .main-title {
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            position: relative;
+            text-shadow: var(--glow-text);
+        }
+        
+        [data-theme="dark"] .navbar-brand .main-title {
+            background: linear-gradient(135deg, #F8FAFC 0%, #38BDF8 50%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(var(--glow-text));
+        }
+        
+        .navbar-brand .main-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .navbar-brand:hover .main-title::after {
+            opacity: 1;
+        }
+        
+        .navbar-brand i {
+            font-size: 1.8rem;
+            color: #FFFFFF !important;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+            margin-right: 4px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .navbar-brand i.fa-kidneys {
+            color: #FFFFFF !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-tagline {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Theme Toggle Button - Enhanced Glassmorphism */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+        
+        .theme-toggle i {
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease;
+        }
+        
+        .theme-toggle .fa-sun {
+            position: absolute;
+        }
+        
+        .theme-toggle .fa-moon {
+            position: absolute;
+        }
+        
+        [data-theme="light"] .theme-toggle .fa-moon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0);
+        }
+        
+        [data-theme="light"] .theme-toggle .fa-sun {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+        
+        [data-theme="dark"] .theme-toggle .fa-sun {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0);
+        }
+        
+        [data-theme="dark"] .theme-toggle .fa-moon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+        
+        .header-tagline::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transition: width 0.3s ease;
+        }
+        
+        .header-tagline:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.35);
+            color: #ffffff;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-tagline:hover::before {
+            width: 80%;
+        }
+        
+        .header-tagline i {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .header-tagline .separator {
+            opacity: 0.6;
+            margin: 0 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 16px 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .header-tagline {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                align-self: flex-end;
+            }
+            
+            .navbar .container {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .navbar .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .navbar-brand {
+                align-items: center;
+            }
+            
+            .header-tagline {
+                align-self: center;
+                line-height: 1.5;
+            }
+        }
+        
+        .upload-area {
+            border: 3px dashed var(--secondary-color);
+            border-radius: 20px;
+            padding: 60px 50px;
+            text-align: center;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(240, 247, 255, 0.95) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        [data-theme="dark"] .upload-area {
+            background: linear-gradient(135deg, 
+                rgba(30, 41, 59, 0.8) 0%, 
+                rgba(15, 23, 42, 0.8) 100%);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.3),
+                0 10px 20px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(56, 189, 248, 0.1);
+        }
+        
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(30, 64, 175, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .upload-area:hover::before {
+            opacity: 1;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.08),
+                0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        [data-theme="dark"] .upload-area:hover {
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(56, 189, 248, 0.2);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, 
+                rgba(240, 253, 250, 0.95) 0%, 
+                rgba(220, 252, 231, 0.95) 100%);
+            box-shadow: 
+                0 8px 16px rgba(16, 185, 129, 0.2),
+                0 0 30px rgba(16, 185, 129, 0.15);
+            /* No transform - static */
+        }
+        
+        [data-theme="dark"] .upload-area.dragover {
+            background: linear-gradient(135deg, 
+                rgba(6, 78, 59, 0.6) 0%, 
+                rgba(20, 83, 45, 0.6) 100%);
+            box-shadow: 
+                0 8px 16px rgba(16, 185, 129, 0.3),
+                0 0 40px rgba(16, 185, 129, 0.2);
+            /* No transform - static */
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 20px rgba(0, 0, 0, 0.08),
+                0 20px 40px rgba(0, 0, 0, 0.04);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+        }
+        
+        [data-theme="dark"] .card {
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.3),
+                0 10px 20px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(0, 0, 0, 0.2),
+                0 0 30px rgba(56, 189, 248, 0.1);
+        }
+        
+        .card:hover {
+            /* Enhanced shadow depth - no movement */
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.08),
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 40px 80px rgba(0, 0, 0, 0.06);
+            border-color: var(--secondary-color);
+        }
+        
+        [data-theme="dark"] .card:hover {
+            /* Enhanced shadow depth with glow - no movement */
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 40px 80px rgba(0, 0, 0, 0.3),
+                0 0 50px rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+        
+        
+        .card-header {
+            background: var(--gradient-1);
+            color: var(--text-inverse);
+            border: none;
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: -0.01em;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) inset;
+        }
+        
+        [data-theme="dark"] .card-header {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) inset, 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+        
+        /* Hero Section Card Enhancement */
+        .card-body[style*="gradient-hero"] {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-body[style*="gradient-hero"]::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .card-body[style*="gradient-hero"] > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .display-4 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+        
+        @media (max-width: 768px) {
+            .display-4 {
+                font-size: 2rem;
+            }
+        }
+        
+        .result-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: var(--text-primary);
+            border-radius: 20px;
+            padding: 35px;
+            margin: 25px 0;
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.08),
+                0 20px 40px rgba(0, 0, 0, 0.12);
+            border-left: 5px solid var(--secondary-color);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: slideInUp 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        [data-theme="dark"] .result-card {
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(56, 189, 248, 0.1);
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .detection-item {
+            background: var(--bg-tertiary);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px 24px;
+            margin: 15px 0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.06);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        [data-theme="dark"] .detection-item {
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                0 0 15px rgba(56, 189, 248, 0.1);
+        }
+        
+        .detection-item:hover {
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.08),
+                0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="dark"] .detection-item:hover {
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(56, 189, 248, 0.15);
+        }
+        
+        .confidence-bar {
+            height: 30px;
+            background: linear-gradient(90deg, #ff4444 0%, #ffaa00 50%, #00aa00 100%);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .confidence-indicator {
+            position: absolute;
+            top: -30px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .btn {
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06);
+            border: none;
+            color: var(--text-inverse);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            /* Enhanced shadow - subtle lift effect */
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.15),
+                0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2563EB 0%, #1E40AF 50%, #1e3a8a 100%);
+            background-size: 200% 200%;
+            box-shadow: 
+                0 4px 15px rgba(37, 99, 235, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 
+                0 8px 20px rgba(37, 99, 235, 0.4),
+                0 0 30px rgba(37, 99, 235, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #2563EB 0%, #1E40AF 50%, #1e3a8a 100%);
+            background-size: 200% 200%;
+            box-shadow: 
+                0 4px 15px rgba(37, 99, 235, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-info:hover {
+            box-shadow: 
+                0 8px 20px rgba(37, 99, 235, 0.4),
+                0 0 30px rgba(37, 99, 235, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #229954 100%);
+            box-shadow: 
+                0 4px 15px rgba(16, 185, 129, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 
+                0 8px 20px rgba(16, 185, 129, 0.4),
+                0 0 30px rgba(16, 185, 129, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        [data-theme="dark"] .btn {
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+        
+        .model-info {
+            background: #FFFFFF !important;
+            color: #000000;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #10b981;
+            border: 2px solid #10b981;
+        }
+        
+        .model-info .card-header {
+            background: #10b981 !important;
+            color: #FFFFFF !important;
+            border-radius: 12px 12px 0 0;
+            font-weight: 700;
+        }
+        
+        .model-info .card-body {
+            background: #FFFFFF !important;
+            color: #000000;
+        }
+        
+        .model-info .text-muted {
+            color: #000000 !important;
+        }
+        
+        .model-info h5,
+        .model-info h6 {
+            color: #000000 !important;
+            font-weight: 700;
+        }
+        
+        .model-info .badge.bg-success {
+            background-color: #10b981 !important;
+            color: #FFFFFF !important;
+            font-weight: 700;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .model-info .badge.bg-secondary {
+            background-color: #6c757d !important;
+            color: #FFFFFF !important;
+            font-weight: 700;
+        }
+        
+        .model-info span:not(.badge) {
+            color: #000000 !important;
+            font-weight: 600;
+        }
+        
+        .model-info i {
+            color: #10b981 !important;
+        }
+        
+        .model-info .text-primary {
+            color: #10b981 !important;
+        }
+        
+        .model-info .text-success {
+            color: #10b981 !important;
+        }
+        
+        .model-info .text-info {
+            color: #10b981 !important;
+        }
+        
+        .model-info .text-warning {
+            color: #10b981 !important;
+        }
+        
+        .model-info p {
+            color: #000000 !important;
+        }
+        
+        .model-info .h5,
+        .model-info .h6 {
+            color: #000000 !important;
+        }
+        
+        [data-theme="dark"] .model-info {
+            background: #FFFFFF !important;
+            color: #000000 !important;
+            border: 2px solid #10b981;
+        }
+        
+        [data-theme="dark"] .model-info .card-header {
+            background: #10b981 !important;
+            color: #FFFFFF !important;
+        }
+        
+        [data-theme="dark"] .model-info .card-body {
+            background: #FFFFFF !important;
+            color: #000000 !important;
+        }
+        
+        [data-theme="dark"] .model-info .text-muted {
+            color: #000000 !important;
+        }
+        
+        [data-theme="dark"] .model-info span:not(.badge) {
+            color: #000000 !important;
+        }
+        
+        [data-theme="dark"] .model-info p {
+            color: #000000 !important;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .spinner-border {
+            width: 50px;
+            height: 50px;
+            border-width: 5px;
+            color: var(--secondary-color);
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        [data-theme="dark"] .badge {
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(56, 189, 248, 0.2),
+                0 0 10px rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 20px 24px;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.06);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        [data-theme="dark"] .alert {
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                0 0 15px rgba(56, 189, 248, 0.1);
+        }
+        
+        .alert-info {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .alert-success {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .alert-danger {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .alert-warning {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.9) 0%, 
+                rgba(255, 255, 255, 0.7) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        [data-theme="dark"] .stats-card {
+            background: linear-gradient(135deg, 
+                rgba(56, 189, 248, 0.15) 0%, 
+                rgba(30, 58, 138, 0.15) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(56, 189, 248, 0.2),
+                0 0 0 1px rgba(56, 189, 248, 0.1),
+                0 0 30px rgba(56, 189, 248, 0.1);
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        [data-theme="dark"] .stats-card::before {
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+        }
+        
+        .stats-card:hover::before {
+            opacity: 1;
+        }
+        
+        .stats-card:hover {
+            /* Static - no movement, only shadow/glow increase */
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.3),
+                0 0 40px rgba(37, 99, 235, 0.2);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(255, 255, 255, 0.8) 100%);
+        }
+        
+        [data-theme="dark"] .stats-card:hover {
+            /* Static - no movement, only shadow/glow increase */
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(56, 189, 248, 0.3),
+                0 0 0 1px rgba(56, 189, 248, 0.2),
+                0 0 50px rgba(56, 189, 248, 0.25);
+            background: linear-gradient(135deg, 
+                rgba(56, 189, 248, 0.2) 0%, 
+                rgba(30, 58, 138, 0.2) 100%);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: 'Poppins', 'Inter', sans-serif;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), var(--glow-text);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .stats-label {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), var(--glow-text);
+        }
+        
+        [data-theme="dark"] .stats-number {
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5), 0 0 30px rgba(56, 189, 248, 0.3), 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        [data-theme="dark"] .stats-label {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4), 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+        
+        /* Override for stats cards on white background (if used elsewhere) */
+        .card-body:not([style*="background"]) .stats-card,
+        .card-body:not([style*="gradient"]) .stats-card {
+            background: white;
+        }
+        
+        .card-body:not([style*="background"]) .stats-card .stats-number,
+        .card-body:not([style*="gradient"]) .stats-card .stats-number {
+            color: var(--primary-color);
+        }
+        
+        .card-body:not([style*="background"]) .stats-card .stats-label,
+        .card-body:not([style*="gradient"]) .stats-card .stats-label {
+            color: #6c757d;
+        }
+        
+        .visualization-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: var(--shadow-medium);
+            margin: 20px 0;
+        }
+        
+        .visualization-container img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .visualization-container:hover img {
+            transform: scale(1.05);
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .level-1 { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; }
+        .level-2 { background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%); color: white; }
+        .level-3 { background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%); color: white; }
+        
+        .risk-badge-low { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); color: #155724; }
+        .risk-badge-moderate { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; }
+        .risk-badge-high { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); color: #721c24; }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        /* Text color utilities */
+        .text-muted {
+            color: var(--text-secondary) !important;
+        }
+        
+        /* Typography Hierarchy - Modern & Clean */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        h1 { font-size: 2.5rem; font-weight: 800; }
+        h2 { font-size: 2rem; font-weight: 700; }
+        h3 { font-size: 1.75rem; font-weight: 700; }
+        h4 { font-size: 1.5rem; font-weight: 600; }
+        h5 { font-size: 1.25rem; font-weight: 600; }
+        h6 { font-size: 1rem; font-weight: 600; }
+        
+        p {
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .lead {
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, 
+        [data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6 {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3), 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+        
+        [data-theme="dark"] .section-title {
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 0 30px rgba(56, 189, 248, 0.2);
+        }
+        
+        /* Form elements */
+        .form-control, .form-label {
+            color: var(--text-primary);
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-control {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: var(--secondary-color);
+            color: var(--text-primary);
+            box-shadow: 
+                0 0 0 4px rgba(37, 99, 235, 0.1),
+                0 4px 12px rgba(37, 99, 235, 0.15);
+            outline: none;
+        }
+        
+        [data-theme="dark"] .form-control:focus {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 
+                0 0 0 4px rgba(56, 189, 248, 0.2),
+                0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+        
+        .gradient-text {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* List group items */
+        .list-group-item {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+        
+        /* Badge colors */
+        .badge {
+            color: var(--text-inverse);
+        }
+        
+        /* Bootstrap overrides for dark mode */
+        [data-theme="dark"] .bg-light {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        [data-theme="dark"] .text-muted {
+            color: var(--text-secondary) !important;
+        }
+        
+        /* Smooth theme transition */
+        html.theme-transitioning * {
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, text-shadow 0.5s ease !important;
+        }
+        
+        /* Dark mode specific glow enhancements */
+        [data-theme="dark"] .result-card {
+            box-shadow: var(--shadow-medium), var(--glow-card);
+            border-left-color: var(--secondary-color);
+        }
+        
+        [data-theme="dark"] .detection-item {
+            box-shadow: var(--shadow-light), 0 0 15px rgba(56, 189, 248, 0.1);
+            border-left-color: var(--secondary-color);
+        }
+        
+        [data-theme="dark"] .model-info {
+            box-shadow: var(--shadow-light), var(--glow-card);
+        }
+        
+        [data-theme="dark"] .upload-area {
+            box-shadow: var(--shadow-light), 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+        
+        [data-theme="dark"] .upload-area:hover {
+            box-shadow: var(--shadow-medium), 0 0 30px rgba(56, 189, 248, 0.2);
+        }
+        
+        [data-theme="dark"] .badge {
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+        
+        [data-theme="dark"] .alert {
+            box-shadow: var(--shadow-light), 0 0 15px rgba(56, 189, 248, 0.1);
+        }
+        
+        /* Responsive Design Enhancements */
+        @media (max-width: 768px) {
+            .card {
+                border-radius: 16px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .stats-card {
+                padding: 20px 15px;
+                margin: 8px;
+            }
+            
+            .stats-number {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .upload-area {
+                padding: 40px 20px;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+            h5 { font-size: 1.1rem; }
+        }
+        
+        @media (max-width: 576px) {
+            .card {
+                border-radius: 12px;
+            }
+            
+            .stats-card {
+                padding: 18px 12px;
+            }
+            
+            .stats-number {
+                font-size: 1.75rem;
+            }
+            
+            .upload-area {
+                padding: 30px 15px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Selection Styling */
+        ::selection {
+            background: rgba(37, 99, 235, 0.3);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] ::selection {
+            background: rgba(56, 189, 248, 0.3);
+        }
+        
+        /* Scrollbar Styling (Webkit) */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-kidneys" style="color: #FFFFFF !important; font-size: 1.8rem; margin-right: 8px;"></i>
+                <span class="main-title">Lightweight AI Kidney Stone Detection</span>
+            </a>
+            <div class="header-right">
+                <div class="header-tagline">
+                    <i class="fas fa-microscope"></i>
+                    <span>Multi-Level Explainable</span>
+                    <span class="separator">•</span>
+                    <span>Real-Time Performance</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- Hero Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center p-5" style="background: var(--gradient-hero); color: white; border-radius: 15px;">
+                        <h1 class="display-4 mb-3" style="color: #FFFFFF !important;"><i class="fas fa-brain" style="color: #FFFFFF !important;"></i> Advanced AI Diagnostics</h1>
+                        <p class="lead" style="color: #FFFFFF !important;">Real-time kidney stone detection with multi-level explainability for clinical decision support</p>
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="stats-card" style="border-top-color: #667eea;">
+                                    <div class="stats-number">8-10ms</div>
+                                    <div class="stats-label">Inference Time</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card" style="border-top-color: #f093fb;">
+                                    <div class="stats-number">6 MB</div>
+                                    <div class="stats-label">Model Size</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card" style="border-top-color: #4facfe;">
+                                    <div class="stats-number">3-Level</div>
+                                    <div class="stats-label">Explainability</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-file-medical"></i> Medical Image Upload</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h4 class="mb-3">Drag & Drop Your KUB X-Ray Image</h4>
+                            <p class="text-muted mb-4">or click anywhere to browse files</p>
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                            <div class="alert alert-info" style="margin-top: 20px;">
+                                <i class="fas fa-info-circle"></i> Supported formats: JPG, PNG, BMP, TIFF (Max: 16MB)
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label for="confidence" class="form-label fw-bold">
+                                <i class="fas fa-sliders-h"></i> Confidence Threshold: <span id="confidenceValue" class="badge bg-primary">0.25</span>
+                            </label>
+                            <input type="range" class="form-range" id="confidence" min="0.1" max="0.9" step="0.05" value="0.25" style="cursor: pointer;">
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-check-circle"></i> 0.1 (Sensitive)</span>
+                                <span id="confidenceValueLarge" class="fw-bold text-primary"></span>
+                                <span><i class="fas fa-shield-alt"></i> 0.9 (Precise)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex mt-4">
+                            <button class="btn btn-primary flex-fill" id="detectBtn" disabled>
+                                <i class="fas fa-search me-2"></i> Detect Kidney Stones
+                            </button>
+                            <button class="btn btn-info flex-fill" id="explainBtn" disabled>
+                                <i class="fas fa-brain me-2"></i> Multi-Level Analysis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-layer-group"></i> Batch Processing</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-images"></i> Select Multiple Images
+                            </label>
+                            <input type="file" id="batchInput" multiple accept="image/*" class="form-control">
+                            <small class="text-muted">Select multiple KUB X-ray images</small>
+                        </div>
+                        <div id="batchFileList" class="mb-3" style="display: none;">
+                            <small class="text-muted">Files selected: <span id="fileCount">0</span></small>
+                        </div>
+                        <button class="btn btn-success w-100" id="batchBtn" disabled>
+                            <i class="fas fa-layer-group me-2"></i> Process Batch
+                        </button>
+                        <div class="alert alert-info mt-3">
+                            <small><i class="fas fa-info-circle"></i> Process up to 10 images simultaneously</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Information -->
+        <div class="model-info card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-cog"></i> System Status & Features</h5>
+            </div>
+            <div class="card-body">
+                <div id="modelInfo" class="text-center py-3">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mb-0 mt-2">Loading system information...</p>
+                </div>
+                
+                <div class="mt-3 pt-3 border-top">
+                    <h6 class="mb-3"><i class="fas fa-rocket"></i> Feature Status</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-brain text-primary"></i> Standard Explainability</span>
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-star text-success"></i> Advanced Explainability</span>
+                                <span class="badge bg-success" id="advancedStatusBadge">Available</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-stethoscope text-info"></i> Clinical Relevance</span>
+                                <span class="badge bg-success" id="clinicalStatusBadge">Available</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-chart-line text-warning"></i> Production Monitoring</span>
+                                <span class="badge bg-success" id="monitoringStatusBadge">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading text-center mt-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Processing image...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ============================================
+        // Theme Toggle Functionality
+        // ============================================
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            
+            // Get saved theme or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            // Apply saved theme immediately (before page render to prevent flash)
+            html.setAttribute('data-theme', savedTheme);
+            
+            // Update toggle icon based on current theme
+            function updateToggleIcon(theme) {
+                // Icon visibility is handled by CSS based on data-theme attribute
+            }
+            
+            // Toggle theme function
+            function toggleTheme() {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Apply new theme
+                html.setAttribute('data-theme', newTheme);
+                
+                // Save to localStorage
+                localStorage.setItem('theme', newTheme);
+                
+                // Update icon
+                updateToggleIcon(newTheme);
+                
+                // Optional: Add a smooth transition class
+                html.classList.add('theme-transitioning');
+                setTimeout(() => {
+                    html.classList.remove('theme-transitioning');
+                }, 500);
+            }
+            
+            // Event listener for toggle button
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+                updateToggleIcon(savedTheme);
+            }
+            
+            // Optional: Listen for system theme changes
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                
+                // Only auto-detect if no saved preference
+                if (!localStorage.getItem('theme')) {
+                    const prefersDark = mediaQuery.matches;
+                    const initialTheme = prefersDark ? 'dark' : 'light';
+                    html.setAttribute('data-theme', initialTheme);
+                    localStorage.setItem('theme', initialTheme);
+                    updateToggleIcon(initialTheme);
+                }
+                
+                // Optional: Listen for system theme changes (commented out to respect user choice)
+                // mediaQuery.addEventListener('change', (e) => {
+                //     if (!localStorage.getItem('theme')) {
+                //         html.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                //         updateToggleIcon(e.matches ? 'dark' : 'light');
+                //     }
+                // });
+            }
+        })();
+        
+        // ============================================
+        // Application JavaScript
+        // ============================================
+        // Global variables
+        let selectedFile = null;
+        let selectedFiles = [];
+
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const batchInput = document.getElementById('batchInput');
+        const detectBtn = document.getElementById('detectBtn');
+        const explainBtn = document.getElementById('explainBtn');
+        const batchBtn = document.getElementById('batchBtn');
+        const confidenceSlider = document.getElementById('confidence');
+        const confidenceValue = document.getElementById('confidenceValue');
+        const loading = document.querySelector('.loading');
+        const results = document.getElementById('results');
+
+        // Confidence slider with enhanced display
+        confidenceSlider.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            confidenceValue.textContent = value.toFixed(2);
+            const valueLarge = document.getElementById('confidenceValueLarge');
+            if (valueLarge) {
+                valueLarge.textContent = value.toFixed(2);
+            }
+        });
+
+        // Upload area click
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // File input change
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                detectBtn.disabled = false;
+                explainBtn.disabled = false;
+                uploadArea.innerHTML = `
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-4x" style="color: #10b981 !important;"></i>
+                    </div>
+                    <h4 class="mb-2" style="color: #10b981 !important; font-weight: 700;"><i class="fas fa-file-medical"></i> Image Ready</h4>
+                    <p class="text-muted"><strong>${selectedFile.name}</strong></p>
+                    <p class="text-muted small">${(selectedFile.size / 1024).toFixed(1)} KB</p>
+                    <button class="btn btn-outline-secondary btn-sm mt-2" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Choose Different File
+                    </button>
+                `;
+            }
+        });
+
+        // Batch input change
+        batchInput.addEventListener('change', function(e) {
+            selectedFiles = Array.from(e.target.files);
+            batchBtn.disabled = selectedFiles.length === 0;
+            
+            // Show file count
+            const fileCount = document.getElementById('fileCount');
+            const batchFileList = document.getElementById('batchFileList');
+            if (fileCount) {
+                fileCount.textContent = selectedFiles.length;
+                if (batchFileList) {
+                    batchFileList.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+                }
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                detectBtn.disabled = false;
+                explainBtn.disabled = false;
+                uploadArea.innerHTML = `
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-4x" style="color: #10b981 !important;"></i>
+                    </div>
+                    <h4 class="mb-2" style="color: #10b981 !important; font-weight: 700;"><i class="fas fa-file-medical"></i> Image Ready</h4>
+                    <p class="text-muted"><strong>${selectedFile.name}</strong></p>
+                    <p class="text-muted small">${(selectedFile.size / 1024).toFixed(1)} KB</p>
+                    <button class="btn btn-outline-secondary btn-sm mt-2" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Choose Different File
+                    </button>
+                `;
+            }
+        });
+
+        // Single detection
+        detectBtn.addEventListener('click', function() {
+            if (!selectedFile) return;
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('confidence', confidenceSlider.value);
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                console.log('Response data:', data);
+                if (data.success) {
+                    displayResults(data, selectedFile.name);
+                } else {
+                    showError(data.error || 'Detection failed');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                showError('Detection failed: ' + error.message);
+            });
+        });
+
+        // Explainability analysis
+        explainBtn.addEventListener('click', function() {
+            if (!selectedFile) return;
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            
+            fetch('/explain', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (data.success) {
+                    displayExplainabilityResults(data);
+                } else {
+                    showError(data.error);
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                showError('Explainability analysis failed: ' + error.message);
+            });
+        });
+
+        // Batch detection
+        batchBtn.addEventListener('click', function() {
+            if (selectedFiles.length === 0) return;
+            
+            const formData = new FormData();
+            selectedFiles.forEach(file => {
+                formData.append('files', file);
+            });
+            formData.append('confidence', confidenceSlider.value);
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            
+            fetch('/batch', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (data.success && data.results) {
+                    displayBatchResults(data.results);
+                } else {
+                    showError(data.error || 'Batch detection failed');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                showError('Batch detection failed: ' + error.message);
+            });
+        });
+
+        // Display results
+        function displayResults(data, filename) {
+            const detections = data.detections || [];
+            const inferenceTime = data.inference_time || 0;
+            const imageSize = data.image_size || [0, 0];
+            
+            const html = `
+                <div class="result-card">
+                    <h5><i class="fas fa-file-image"></i> ${filename}</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Inference Time:</strong> ${inferenceTime}ms</p>
+                            <p><strong>Image Size:</strong> ${imageSize[1]}x${imageSize[0]}</p>
+                            <p><strong>Detections:</strong> ${detections.length}</p>
+                        </div>
+                        <div class="col-md-6">
+                            ${data.result_image ? `<img src="${data.result_image}" class="img-fluid" alt="Detection Result">` : ''}
+                        </div>
+                    </div>
+                    ${detections.length > 0 ? `
+                        <h6><i class="fas fa-search"></i> Detected Kidney Stones:</h6>
+                        ${detections.map(detection => `
+                            <div class="detection-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span><strong>Stone ${detection.id || 1}</strong></span>
+                                    <span class="badge bg-primary">${(detection.confidence * 100).toFixed(1)}%</span>
+                                </div>
+                                <div class="confidence-bar mt-2">
+                                    <div class="confidence-indicator" style="left: ${detection.confidence * 100}%">
+                                        ${(detection.confidence * 100).toFixed(1)}%
+                                    </div>
+                                </div>
+                                <small class="text-muted">Bbox: [${detection.bbox?.map(v => v.toFixed(0)).join(', ') || 'N/A'}]</small>
+                            </div>
+                        `).join('')}
+                    ` : '<div class="alert alert-success"><i class="fas fa-check-circle"></i> No kidney stones detected</div>'}
+                </div>
+            `;
+            results.innerHTML = html;
+        }
+
+        // Display batch results
+        function displayBatchResults(batchData) {
+            let html = '<div class="result-card"><h4><i class="fas fa-layer-group"></i> Batch Detection Results</h4></div>';
+            
+            if (!batchData || !Array.isArray(batchData)) {
+                html += '<div class="alert alert-warning">No results to display</div>';
+                results.innerHTML = html;
+                return;
+            }
+            
+            batchData.forEach(result => {
+                const detCount = result.detections ? result.detections.length : 0;
+                html += `
+                    <div class="result-card mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6><i class="fas fa-file-image"></i> ${result.filename || 'Unknown'}</h6>
+                            <span class="badge ${detCount > 0 ? 'bg-warning' : 'bg-success'}">
+                                ${detCount > 0 ? detCount + ' Stones' : 'No Stones'}
+                            </span>
+                        </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                <p><strong>Inference Time:</strong> ${result.inference_time || 'N/A'}ms</p>
+                                ${detCount > 0 ? `
+                                    <div class="mt-2">
+                                        <strong>Detection Details:</strong>
+                                        ${(result.detections || []).map((detection, idx) => `
+                                            <div class="detection-item mt-2">
+                                                <span class="badge bg-primary">Stone #${idx + 1}: ${(detection.confidence * 100).toFixed(1)}%</span>
+                                                ${detection.bbox ? `
+                                                    <span class="text-muted small ms-2">
+                                                        [${detection.bbox.map(b => b.toFixed(0)).join(', ')}]
+                                                    </span>
+                                                ` : ''}
+                                            </div>
+                                    `).join('')}
+                                    </div>
+                                ` : ''}
+                                </div>
+                                <div class="col-md-4">
+                                ${result.result_image ? `<img src="${result.result_image}" class="img-fluid rounded" alt="Detection Result">` : '<p class="text-muted">No image available</p>'}
+                                </div>
+                            </div>
+                        ${result.error ? `<div class="alert alert-warning mt-2"><small>Error: ${result.error}</small></div>` : ''}
+                    </div>
+                `;
+            });
+            
+            results.innerHTML = html;
+        }
+
+        // Display explainability results
+        function displayExplainabilityResults(data) {
+            const multiLevel = data.multi_level_explanation || {};
+            const advanced = data.advanced_explanation || {};
+            const clinicalPrognosis = multiLevel.clinical_prognosis || {};
+            const analysis = clinicalPrognosis.analysis || {};
+            const advancedAnalysis = advanced.advanced_analysis || {};
+            const clinicalRelevance = data.clinical_relevance || {};
+            const clinicalReport = data.clinical_report || {};
+            const methodsUsed = data.explainability_methods_used || 'standard';
+            
+            let html = `
+                <div class="result-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-brain"></i> Multi-Level Explainability Analysis - ${data.filename}</h5>
+                        ${methodsUsed === 'advanced' ? '<span class="badge bg-success"><i class="fas fa-star"></i> Advanced Methods</span>' : '<span class="badge bg-info">Standard Methods</span>'}
+                        ${clinicalRelevance.severity_assessment ? '<span class="badge bg-primary ms-2"><i class="fas fa-stethoscope"></i> Clinical Analysis</span>' : ''}
+                    </div>
+                    
+                    <!-- Clinical Relevance & Clinical Report Section -->
+                    ${clinicalRelevance.severity_assessment ? `
+                    <div class="alert alert-primary" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #2196F3;">
+                        <h6><i class="fas fa-hospital"></i> Clinical Relevance Analysis</h6>
+                        ${clinicalReport.executive_summary ? `
+                        <div class="card bg-white mb-3 mt-3">
+                            <div class="card-header bg-primary text-white">
+                                <strong><i class="fas fa-file-medical"></i> Executive Summary</strong>
+                            </div>
+                            <div class="card-body">
+                                <pre style="white-space: pre-wrap; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 0.9rem;">${clinicalReport.executive_summary}</pre>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <!-- Severity Assessment -->
+                        <div class="row mb-3">
+                        <div class="col-md-6">
+                                <div class="card bg-white">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-exclamation-triangle"></i> Severity Assessment</h6>
+                                        <p class="mb-1"><strong>Level:</strong> 
+                                            <span class="badge ${clinicalRelevance.severity_assessment.severity_level === 'Critical' ? 'bg-danger' : clinicalRelevance.severity_assessment.severity_level === 'Severe' ? 'bg-warning' : clinicalRelevance.severity_assessment.severity_level === 'Moderate' ? 'bg-info' : 'bg-success'}">
+                                                ${clinicalRelevance.severity_assessment.severity_level}
+                                            </span>
+                                        </p>
+                                        <p class="mb-1"><strong>Score:</strong> ${clinicalRelevance.severity_assessment.severity_score}/100</p>
+                                        <p class="mb-0"><small class="text-muted">${clinicalRelevance.severity_assessment.interpretation}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-white">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-clock"></i> Treatment Urgency</h6>
+                                        <p class="mb-1"><strong>Level:</strong> 
+                                            <span class="badge ${clinicalRelevance.treatment_urgency.urgency_level === 'Emergency Treatment' ? 'bg-danger' : clinicalRelevance.treatment_urgency.urgency_level === 'Urgent Review' ? 'bg-warning' : 'bg-success'}">
+                                                ${clinicalRelevance.treatment_urgency.urgency_level}
+                                            </span>
+                                        </p>
+                                        <p class="mb-1"><strong>Timeframe:</strong> ${clinicalRelevance.treatment_urgency.recommended_time_frame}</p>
+                                        <p class="mb-0"><small class="text-muted">Urgency Score: ${clinicalRelevance.treatment_urgency.urgency_score}/100</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Clinical Recommendations -->
+                        ${clinicalRelevance.clinical_recommendations ? `
+                        <div class="card bg-white mb-3">
+                            <div class="card-header bg-info text-white">
+                                <strong><i class="fas fa-prescription"></i> Clinical Recommendations</strong>
+                    </div>
+                            <div class="card-body">
+                                <ul class="mb-0">
+                                ${clinicalRelevance.clinical_recommendations.primary_recommendations ? 
+                                    clinicalRelevance.clinical_recommendations.primary_recommendations.map(rec => `
+                                    <li class="mb-2">
+                                        <strong>[${rec.priority}]</strong> ${rec.action}
+                                        <br><small class="text-muted">${rec.rationale}</small>
+                                    </li>
+                                    `).join('') : ''
+                                }
+                                </ul>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <!-- Anatomical Relevance -->
+                        ${clinicalRelevance.anatomical_relevance ? `
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="card bg-white">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-map-marker-alt"></i> Anatomical Distribution</h6>
+                                        <p class="mb-1"><strong>Left Kidney:</strong> ${clinicalRelevance.anatomical_relevance.detection_distribution.left_kidney} stones</p>
+                                        <p class="mb-1"><strong>Right Kidney:</strong> ${clinicalRelevance.anatomical_relevance.detection_distribution.right_kidney} stones</p>
+                                        <p class="mb-1"><strong>Bladder:</strong> ${clinicalRelevance.anatomical_relevance.detection_distribution.bladder} stones</p>
+                                        <p class="mb-0"><small><strong>Primary Concern:</strong> ${clinicalRelevance.anatomical_relevance.primary_concern_location}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-white">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-exclamation-circle"></i> Clinical Significance</h6>
+                                        ${clinicalRelevance.anatomical_relevance.clinical_significance ? 
+                                            clinicalRelevance.anatomical_relevance.clinical_significance.map(sig => `
+                                            <p class="mb-2"><strong>${sig.region}:</strong> ${sig.count} stones
+                                            <br><small class="text-muted">${sig.clinical_importance}</small>
+                                            <br><small class="text-muted">${sig.consideration}</small></p>
+                                            `).join('') : ''
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <!-- Management Guidance -->
+                        ${clinicalRelevance.management_guidance ? `
+                        <div class="card bg-white mb-3">
+                            <div class="card-header bg-success text-white">
+                                <strong><i class="fas fa-user-md"></i> Management Guidance</strong>
+                        </div>
+                            <div class="card-body">
+                                <p><strong>Approach:</strong> ${clinicalRelevance.management_guidance.management_approach}</p>
+                                <p><strong>Intervention:</strong> ${clinicalRelevance.management_guidance.intervention_strategy}</p>
+                                <p><strong>Monitoring:</strong> ${clinicalRelevance.management_guidance.monitoring_frequency}</p>
+                                <div class="row mt-2">
+                        <div class="col-md-6">
+                                        <p class="mb-0"><small><i class="fas fa-pills"></i> ${clinicalRelevance.management_guidance.pain_management}</small></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-0"><small><i class="fas fa-shield-alt"></i> ${clinicalRelevance.management_guidance.prevention}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Advanced Explainability Methods -->
+                    ${advancedAnalysis && methodsUsed === 'advanced' ? `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-magic"></i> Advanced Explainability Methods Applied</h6>
+                        <div class="row mt-3">
+                            ${advanced.integrated_gradients ? `
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="fas fa-chart-line"></i> Integrated Gradients</h6>
+                                <div class="visualization-container">
+                                    <img src="${advanced.integrated_gradients}" class="img-fluid" alt="Integrated Gradients">
+                    </div>
+                                <p class="text-muted small mt-2">Shows cumulative gradients along integration path for better attribution</p>
+                            </div>
+                            ` : ''}
+                            ${advanced.attention_flow ? `
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="fas fa-stream"></i> Attention Flow</h6>
+                                <div class="visualization-container">
+                                    <img src="${advanced.attention_flow}" class="img-fluid" alt="Attention Flow">
+                                </div>
+                                <p class="text-muted small mt-2">Visualizes multi-scale attention patterns across the image</p>
+                            </div>
+                            ` : ''}
+                            ${advanced.feature_importance ? `
+                            <div class="col-md-6 mb-3">
+                                <h6><i class="fas fa-sitemap"></i> Feature Importance</h6>
+                                <div class="visualization-container">
+                                    <img src="${advanced.feature_importance}" class="img-fluid" alt="Feature Importance">
+                                </div>
+                                <p class="text-muted small mt-2">Highlights most important image regions for detection</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Multi-Level Visualizations -->
+                    <h6 class="section-title"><i class="fas fa-layer-group"></i> Standard Multi-Level Analysis</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="level-badge level-1">Level 1</h6>
+                            <span class="text-muted">Pixel-Level (GradCAM)</span>
+                            ${multiLevel.pixel_level ? `
+                            <div class="visualization-container mt-2">
+                                <img src="${multiLevel.pixel_level}" class="img-fluid" alt="Pixel-level analysis">
+                    </div>
+                            <p class="text-muted small">Shows pixel-level attention where model focuses most</p>
+                            ` : '<p class="text-muted">Not available</p>'}
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="level-badge level-2">Level 2</h6>
+                            <span class="text-muted">Region-Level (Attention)</span>
+                            ${multiLevel.region_level ? `
+                            <div class="visualization-container mt-2">
+                                <img src="${multiLevel.region_level}" class="img-fluid" alt="Region-level analysis">
+                            </div>
+                            <p class="text-muted small">Anatomical region analysis with confidence weighting</p>
+                            ` : '<p class="text-muted">Not available</p>'}
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6 class="level-badge level-3">Level 3</h6>
+                            <span class="text-muted">Clinical Prognosis</span>
+                            ${multiLevel.clinical_prognosis?.visualization ? `
+                            <div class="visualization-container mt-2">
+                                <img src="${multiLevel.clinical_prognosis.visualization}" class="img-fluid" alt="Clinical prognosis">
+                    </div>
+                            <p class="text-muted small">Clinical risk assessment and severity scoring</p>
+                            ` : '<p class="text-muted">Not available</p>'}
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-link"></i> Combined View</h6>
+                            ${multiLevel.combined ? `
+                            <div class="visualization-container mt-2">
+                                <img src="${multiLevel.combined}" class="img-fluid" alt="Combined view">
+                            </div>
+                            <p class="text-muted small">Combined multi-level analysis</p>
+                            ` : '<p class="text-muted">Not available</p>'}
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Analysis Metrics -->
+                    ${advancedAnalysis && methodsUsed === 'advanced' ? `
+                    <div class="mt-4">
+                        <h6 class="section-title"><i class="fas fa-chart-bar"></i> Advanced Analysis Metrics</h6>
+                        ${advancedAnalysis.uncertainty ? `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-question-circle"></i> Uncertainty Analysis</h6>
+                                        <p class="mb-0"><strong>Overall Uncertainty:</strong> ${(advancedAnalysis.uncertainty.overall_uncertainty * 100).toFixed(1)}%</p>
+                                        <p class="mb-0"><strong>Avg Confidence:</strong> ${(advancedAnalysis.uncertainty.average_confidence * 100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6><i class="fas fa-project-diagram"></i> Pattern Analysis</h6>
+                                        <p class="mb-0"><strong>Clusters Detected:</strong> ${advancedAnalysis.patterns?.clusters || 0}</p>
+                                        <p class="mb-0"><strong>Spatial Pattern:</strong> ${advancedAnalysis.patterns?.spatial_pattern || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Location Analysis -->
+                    ${analysis.location_analysis && analysis.location_analysis.length > 0 ? `
+                    <div class="mt-3">
+                        <h6 class="section-title"><i class="fas fa-map-marker-alt"></i> Anatomical Location Analysis</h6>
+                        <ul class="list-group">
+                            ${analysis.location_analysis.map(loc => `
+                                <li class="list-group-item">
+                                    <strong>${loc.region}:</strong> 
+                                    Confidence: ${(loc.confidence * 100).toFixed(1)}%
+                                    Size: ${(loc.relative_size * 100).toFixed(2)}% of image
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Statistics -->
+                    ${analysis.statistics ? `
+                    <div class="mt-4">
+                        <h6 class="section-title"><i class="fas fa-chart-bar"></i> Detection Statistics</h6>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="stats-card" style="border-top-color: var(--secondary-color);">
+                                    <div class="stats-number">${analysis.statistics.total_stones}</div>
+                                    <div class="stats-label">Total Stones</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stats-card" style="border-top-color: var(--accent-blue);">
+                                    <div class="stats-number">${(analysis.statistics.average_confidence * 100).toFixed(1)}%</div>
+                                    <div class="stats-label">Avg Confidence</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stats-card" style="border-top-color: var(--success-color);">
+                                    <div class="stats-number">${analysis.statistics.high_confidence_stones}</div>
+                                    <div class="stats-label">High Confidence</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stats-card" style="border-top-color: var(--warning-color);">
+                                    <div class="stats-number">${analysis.statistics.detected_regions?.length || 0}</div>
+                                    <div class="stats-label">Regions</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Interpretation Guide -->
+                    <div class="mt-4">
+                        <h6 class="section-title"><i class="fas fa-info-circle"></i> Interpretation Guide</h6>
+                        <div class="alert alert-info">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Standard Methods:</strong><br>
+                                    • <span class="level-badge level-1">Level 1</span> Pixel-level attention (GradCAM)<br>
+                                    • <span class="level-badge level-2">Level 2</span> Region-level analysis<br>
+                                    • <span class="level-badge level-3">Level 3</span> Clinical prognosis<br>
+                                    • Severity Score: 0-100 scale
+                                </div>
+                                ${methodsUsed === 'advanced' ? `
+                                <div class="col-md-6">
+                                    <strong>Advanced Methods:</strong><br>
+                                    • <span class="badge bg-success">Integrated Gradients</span> Feature attribution<br>
+                                    • <span class="badge bg-success">Attention Flow</span> Multi-scale patterns<br>
+                                    • <span class="badge bg-success">Feature Importance</span> Region ranking<br>
+                                    • <span class="badge bg-success">Uncertainty</span> Confidence analysis
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            results.innerHTML = html;
+        }
+        
+        function getRiskColor(risk) {
+            if (risk === 'Low') return 'success';
+            if (risk === 'Moderate') return 'warning';
+            if (risk === 'High') return 'danger';
+            return 'secondary';
+        }
+
+        // Show error
+        function showError(message) {
+            results.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> ${message}
+                </div>
+            `;
+        }
+
+        // Load model info
+        Promise.all([
+            fetch('/model_info').then(response => response.json()),
+            fetch('/explainability_info').then(response => response.json()).catch(() => ({error: 'Not available'}))
+        ])
+        .then(([modelData, explainabilityData]) => {
+            if (modelData.error) {
+                document.getElementById('modelInfo').innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Model not loaded</div>';
+            } else {
+                const explainabilityStatus = explainabilityData.error ? 
+                    '<span class="badge bg-secondary" style="background-color: #6c757d !important; color: #FFFFFF !important; font-weight: 700;">Not Available</span>' : 
+                    '<span class="badge bg-success" style="background-color: #10b981 !important; color: #FFFFFF !important; font-weight: 700;">Available</span>';
+                
+                // Update feature badges
+                if (modelData.explainability) {
+                    if (modelData.explainability.advanced_available) {
+                        document.getElementById('advancedStatusBadge').classList.add('bg-success');
+                        document.getElementById('advancedStatusBadge').textContent = 'Active';
+                    }
+                    if (modelData.explainability.methods_count >= 4) {
+                        document.getElementById('advancedStatusBadge').textContent = modelData.explainability.methods_count + ' Methods';
+                    }
+                }
+                
+                document.getElementById('modelInfo').innerHTML = `
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <p class="mb-1" style="color: #000000; font-weight: 600;"><i class="fas fa-microchip" style="color: #10b981;"></i> Device</p>
+                                <p class="h5 mb-0" style="color: #000000; font-weight: 700;">
+                                    <span class="badge ${modelData.device === 'cuda' ? 'bg-success' : 'bg-secondary'}" style="background-color: ${modelData.device === 'cuda' ? '#10b981' : '#6c757d'} !important; color: #FFFFFF !important; font-weight: 700;">
+                                        ${modelData.device.toUpperCase()}
+                                    </span>
+                                </p>
+                        </div>
+                            ${modelData.gpu_name ? `
+                            <div class="mb-3">
+                                <p class="mb-1" style="color: #000000; font-weight: 600;"><i class="fas fa-server" style="color: #10b981;"></i> GPU</p>
+                                <p class="h6 mb-0 text-truncate" style="color: #000000; font-weight: 600;" title="${modelData.gpu_name}">${modelData.gpu_name}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <p class="mb-1" style="color: #000000; font-weight: 600;"><i class="fas fa-weight" style="color: #10b981;"></i> Model Size</p>
+                                <p class="h5 mb-0" style="color: #000000; font-weight: 700;">${modelData.model_size.toFixed(1)} MB</p>
+                            </div>
+                            <div class="mb-3">
+                                <p class="mb-1" style="color: #000000; font-weight: 600;"><i class="fas fa-tachometer-alt" style="color: #10b981;"></i> Avg Inference</p>
+                                <p class="h6 mb-0" style="color: #000000; font-weight: 600;">${modelData.performance?.avg_inference_time_ms || 'N/A'} ms</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <p class="mb-1" style="color: #000000; font-weight: 600;"><i class="fas fa-check-circle" style="color: #10b981;"></i> Status</p>
+                                <p class="mb-0"><span class="badge bg-success" style="background-color: #10b981 !important; color: #FFFFFF !important; font-weight: 700;">Ready</span></p>
+                            </div>
+                            <div class="mb-3">
+                                <p class="mb-1" style="color: #000000; font-weight: 600;"><i class="fas fa-brain" style="color: #10b981;"></i> Explainability</p>
+                                <p class="mb-0">${explainabilityStatus.replace('bg-warning', 'bg-secondary').replace('bg-success', 'bg-success')}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            document.getElementById('modelInfo').innerHTML = '<div class="alert alert-warning">Could not load model info</div>';
+        });
+    </script>
+</body>
+</html>

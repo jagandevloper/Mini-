@@ -1,0 +1,89 @@
+# Kidney Stone Detection Project - .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+kidney_stone_env/
+kirc_env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Models & Weights (too large for git)
+*.pt
+*.pth
+*.onnx
+*.h5
+!models/pretrained/*.pt  # Keep pretrained models
+
+# Training outputs
+experiments/*/
+runs/
+outputs/
+*.log
+training*.log
+
+# Data (too large)
+data/train/images/
+data/valid/images/
+data/test/images/
+data/train/labels/
+data/valid/labels/
+data/test/labels/
+
+# Uploads & Results
+uploads/*
+!uploads/.gitkeep
+web/uploads/*
+web/static/results/*
+explainability_output/*
+static/results/*
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Project specific
+detection_result_*.jpg
+uploads/
+static/results/
+templates/*.html~
+web_app_debug.log
+
+# Keep these files
+!data/data.yaml
+!data/README*.txt
+

@@ -1,0 +1,52 @@
+# Virtual environments
+kirc_env/
+kidney_stone_detection_project/kidney_stone_env/
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Model files (large binary files)
+*.pt
+*.pth
+*.onnx
+*.weights
+
+# Logs
+*.log
+logs/
+
+# Uploads and results (user generated)
+uploads/
+static/results/
+flask_app/uploads/
+flask_app/static/results/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Experiments and outputs (can be regenerated)
+experiments/
+runs/
+outputs/
+explainability_output/

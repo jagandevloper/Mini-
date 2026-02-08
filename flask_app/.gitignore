@@ -1,0 +1,43 @@
+# Flask App - .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environments
+venv/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploads and results
+uploads/*
+!uploads/.gitkeep
+static/results/*
+!static/results/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (too large)
+models/*.pt
+models/*.pth
+models/*.onnx
+
+# Keep directory structure
+!static/**/.gitkeep
+!uploads/.gitkeep
+!models/.gitkeep
+
