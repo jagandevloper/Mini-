@@ -1,7 +1,7 @@
 ## 📸 Screenshots
 
 ### Main Interface
-![Main UI](docs/images/ui_main.png)
+![Main UI](docs/images/confusion_matrix.png)
 
 ### Detection Results
 ![Detection](docs/images/fig5_1_detection_results.png)
