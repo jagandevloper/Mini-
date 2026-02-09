@@ -17,28 +17,59 @@ A lightweight, real-time kidney stone detection system powered by YOLOv8 with mu
   - Level 3: Clinical prognosis
 - **Clinical Analysis**: Severity assessment, treatment recommendations
 - **Batch Processing**: Process multiple images simultaneously
-- **Dark/Light Theme**: Modern, responsive UI
+- **Dark Theme UI**: Modern, responsive dark-themed interface
 
 ## 📁 Project Structure
 
 ```
 Light-Weight-Explainable-Model-For-Kidney-Stone-Detection-using-KUB-X-Rays/
 ├── src/
+│   ├── __init__.py
 │   └── app/
-│       ├── main.py           # Flask application
-│       ├── config.py         # Configuration
-│       ├── models/           # Trained YOLOv8 model
-│       │   └── best.pt
-│       ├── static/           # CSS, JS, results
-│       ├── templates/        # HTML templates
-│       ├── utils/            # Explainability modules
-│       └── uploads/          # Upload directory
-├── docs/                     # Documentation
-├── scripts/                  # Training & utility scripts
-├── tests/                    # Test files
-├── run.py                    # Application entry point
-├── requirements.txt          # Dependencies
-└── README.md
+│       ├── __init__.py
+│       ├── main.py                    # Flask application & routes
+│       ├── config.py                  # Configuration settings
+│       ├── models/
+│       │   └── best.pt                # Trained YOLOv8-nano model (6MB)
+│       ├── static/
+│       │   ├── css/                   # Stylesheets
+│       │   ├── js/                    # JavaScript files
+│       │   └── results/               # Detection results output
+│       ├── templates/
+│       │   └── index.html             # Main UI template (dark theme)
+│       ├── uploads/                   # Uploaded images directory
+│       └── utils/
+│           ├── __init__.py
+│           ├── explainability.py      # Multi-level explainability (GradCAM)
+│           ├── advanced_explainability.py  # Integrated Gradients, Attention Flow
+│           └── clinical_relevance.py  # Clinical analysis & recommendations
+├── data/
+│   ├── data.yaml                      # Dataset configuration
+│   ├── train/                         # Training images & labels
+│   ├── valid/                         # Validation images & labels
+│   └── test/                          # Test images & labels
+├── docs/
+│   ├── API_DOCUMENTATION.md           # API endpoints documentation
+│   ├── DEPLOYMENT_GUIDE.md            # Deployment instructions
+│   ├── INSTALLATION.md                # Installation guide
+│   ├── PROJECT_SUMMARY.md             # Project overview
+│   └── images/                        # Documentation images
+├── scripts/
+│   ├── train.py                       # Model training script
+│   ├── evaluate.py                    # Model evaluation script
+│   ├── inference.py                   # Inference script
+│   ├── explainability.py              # Explainability generation
+│   └── real_time.py                   # Real-time detection
+├── tests/
+│   ├── __init__.py
+│   ├── test_app.py                    # Application tests
+│   └── simple_test.py                 # Simple functionality tests
+├── logs/                              # Application logs
+├── uploads/                           # Global uploads directory
+├── run.py                             # Application entry point
+├── requirements.txt                   # Python dependencies
+├── .gitignore                         # Git ignore rules
+└── README.md                          # This file
 ```
 
 ## 🚀 Quick Start
