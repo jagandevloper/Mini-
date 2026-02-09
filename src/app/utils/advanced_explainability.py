@@ -20,6 +20,13 @@ from pathlib import Path
 import time
 from typing import Dict, List, Tuple, Optional
 
+# Get the app directory for proper path resolution
+APP_DIR = Path(__file__).parent.parent
+RESULTS_DIR = APP_DIR / 'static' / 'results'
+
+# Ensure results directory exists
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
 
 class AdvancedExplainabilityAnalyzer:
     """Advanced multi-method explainability analyzer."""
@@ -425,19 +432,25 @@ class AdvancedExplainabilityAnalyzer:
             
             # Save integrated gradients
             ig_vis = self._apply_colormap(image, ig_map)
-            cv2.imwrite(f"static/results/integrated_grad_{timestamp}.jpg", ig_vis)
-            results['integrated_gradients'] = f"/static/results/integrated_grad_{timestamp}.jpg"
+            ig_filename = f"integrated_grad_{timestamp}.jpg"
+            ig_path = str(RESULTS_DIR / ig_filename)
+            cv2.imwrite(ig_path, ig_vis)
+            results['integrated_gradients'] = f"/static/results/{ig_filename}"
             
             # Save attention flow
             attention_vis = cv2.applyColorMap((attention_flow * 255).astype(np.uint8), cv2.COLORMAP_JET)
             combined = cv2.addWeighted(image, 0.7, attention_vis, 0.3, 0)
-            cv2.imwrite(f"static/results/attention_flow_{timestamp}.jpg", combined)
-            results['attention_flow'] = f"/static/results/attention_flow_{timestamp}.jpg"
+            attention_filename = f"attention_flow_{timestamp}.jpg"
+            attention_path = str(RESULTS_DIR / attention_filename)
+            cv2.imwrite(attention_path, combined)
+            results['attention_flow'] = f"/static/results/{attention_filename}"
             
             # Save feature importance
             fi_vis = self._apply_colormap(image, feature_importance)
-            cv2.imwrite(f"static/results/feature_importance_{timestamp}.jpg", fi_vis)
-            results['feature_importance'] = f"/static/results/feature_importance_{timestamp}.jpg"
+            fi_filename = f"feature_importance_{timestamp}.jpg"
+            fi_path = str(RESULTS_DIR / fi_filename)
+            cv2.imwrite(fi_path, fi_vis)
+            results['feature_importance'] = f"/static/results/{fi_filename}"
             
             # Advanced metrics
             results['advanced_analysis'] = {

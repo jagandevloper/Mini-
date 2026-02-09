@@ -12,6 +12,14 @@ import cv2
 import numpy as np
 from pathlib import Path
 import time
+import os
+
+# Get the app directory for proper path resolution
+APP_DIR = Path(__file__).parent.parent
+RESULTS_DIR = APP_DIR / 'static' / 'results'
+
+# Ensure results directory exists
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class ExplainabilityAnalyzer:
@@ -228,41 +236,67 @@ class ExplainabilityAnalyzer:
         
         try:
             image = cv2.imread(image_path)
+            if image is None:
+                print(f"Failed to read image: {image_path}")
+                return results
             
             # Level 1: Pixel-level analysis
             heatmap = self.generate_gradcam_heatmap(image_path, detections)
             gradcam_image = self._apply_colormap(image, heatmap)
-            gradcam_path = f"static/results/gradcam_{timestamp}.jpg"
-            cv2.imwrite(gradcam_path, gradcam_image)
-            results['pixel_level'] = f"/{gradcam_path}"
+            gradcam_filename = f"gradcam_{timestamp}.jpg"
+            gradcam_path = str(RESULTS_DIR / gradcam_filename)
+            success = cv2.imwrite(gradcam_path, gradcam_image)
+            if success:
+                results['pixel_level'] = f"/static/results/{gradcam_filename}"
+            else:
+                print(f"Failed to write gradcam image to {gradcam_path}")
             
             # Level 2: Region-level analysis
             attention_map = self.generate_attention_map(image_path, detections)
             attention_image = cv2.addWeighted(image, 0.6, attention_map, 0.4, 0)
-            attention_path = f"static/results/attention_{timestamp}.jpg"
-            cv2.imwrite(attention_path, attention_image)
-            results['region_level'] = f"/{attention_path}"
+            attention_filename = f"attention_{timestamp}.jpg"
+            attention_path = str(RESULTS_DIR / attention_filename)
+            success = cv2.imwrite(attention_path, attention_image)
+            if success:
+                results['region_level'] = f"/static/results/{attention_filename}"
+            else:
+                print(f"Failed to write attention image to {attention_path}")
             
             # Level 3: Image-level (clinical prognosis)
             clinical_analysis = self.analyze_clinical_regions(detections, image.shape)
             clinical_image = self._generate_clinical_visualization(image, detections, clinical_analysis)
-            clinical_path = f"static/results/clinical_{timestamp}.jpg"
-            cv2.imwrite(clinical_path, clinical_image)
-            results['clinical_prognosis'] = {
-                'visualization': f"/{clinical_path}",
-                'analysis': clinical_analysis
-            }
+            clinical_filename = f"clinical_{timestamp}.jpg"
+            clinical_path = str(RESULTS_DIR / clinical_filename)
+            success = cv2.imwrite(clinical_path, clinical_image)
+            if success:
+                results['clinical_prognosis'] = {
+                    'visualization': f"/static/results/{clinical_filename}",
+                    'analysis': clinical_analysis
+                }
+            else:
+                print(f"Failed to write clinical image to {clinical_path}")
+                results['clinical_prognosis'] = {
+                    'visualization': None,
+                    'analysis': clinical_analysis
+                }
             
             # Combined visualization
             combined = self._combine_visualizations(image, heatmap, attention_map)
-            combined_path = f"static/results/combined_{timestamp}.jpg"
-            cv2.imwrite(combined_path, combined)
-            results['combined'] = f"/{combined_path}"
+            combined_filename = f"combined_{timestamp}.jpg"
+            combined_path = str(RESULTS_DIR / combined_filename)
+            success = cv2.imwrite(combined_path, combined)
+            if success:
+                results['combined'] = f"/static/results/{combined_filename}"
+            else:
+                print(f"Failed to write combined image to {combined_path}")
             
             return results
             
         except Exception as e:
             print(f"Multi-level explanation error: {e}")
+            import traceback
+            traceback.print_exc()
+            return results
             return results
     
     def _apply_colormap(self, image, heatmap, alpha=0.4):
