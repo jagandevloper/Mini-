@@ -17,7 +17,6 @@ A lightweight, real-time kidney stone detection system powered by YOLOv8 with mu
   - Level 3: Clinical prognosis
 - **Clinical Analysis**: Severity assessment, treatment recommendations
 - **Batch Processing**: Process multiple images simultaneously
-- **Dark Theme UI**: Modern, responsive dark-themed interface
 
 ## 📁 Project Structure
 
